@@ -1,0 +1,500 @@
+{
+  "name": "Sistema Automatizado de Consentimientos",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://api.zippopotam.us/es/28001",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        320,
+        0
+      ],
+      "id": "efff478c-7853-476b-9d71-7ac40089259d",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "24e50e7f-3c42-4885-a3a1-428571b91ab4",
+              "leftValue": "={{ $('Get row(s) in sheet').item.json['Alergias/Condiciones'] }}",
+              "rightValue": "Sí",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "e08ff45f-70c1-469d-b112-10a64c9ae277",
+              "leftValue": "={{ $('Get row(s) in sheet').item.json['¿Autorizas publicar fotos del tatuaje en redes?'] }}",
+              "rightValue": "No",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        576,
+        0
+      ],
+      "id": "182efd52-074a-4fe6-bfd7-340130b995f8",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "info.copitttto@gmail.com",
+        "subject": "=⚠️ ALERTA MÉDICA: {{ $('Get row(s) in sheet').item.json['Nombre completo'] }}",
+        "message": "=Nieves, el cliente tiene alergias: {{ $('Get row(s) in sheet').item.json['Si tienes alergias, ¿A qué?'] }}. Por favor, revisa el consentimiento.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        -176
+      ],
+      "id": "484c7b23-cd3f-49c1-9749-58393e815414",
+      "name": "Send a message",
+      "webhookId": "7b2b300b-0684-4eb4-a36c-3eda696a3f13",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jwAta3Y6bvyxJq4e",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -96,
+        0
+      ],
+      "id": "75437e31-c4a8-465e-8a7b-7f6bf7090e96",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1CWh8DXpG07IelqBQLDe1Du9iXVg0HpR6H6mwh3Vmr0Q",
+          "mode": "list",
+          "cachedResultName": "Consentimiento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CWh8DXpG07IelqBQLDe1Du9iXVg0HpR6H6mwh3Vmr0Q/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1756741343,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CWh8DXpG07IelqBQLDe1Du9iXVg0HpR6H6mwh3Vmr0Q/edit#gid=1756741343"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Marca temporal": "={{ $('Get row(s) in sheet').item.json['Marca temporal'] }}",
+            "Estado": "ENVIADO"
+          },
+          "matchingColumns": [
+            "Marca temporal"
+          ],
+          "schema": [
+            {
+              "id": "Marca temporal",
+              "displayName": "Marca temporal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre completo",
+              "displayName": "Nombre completo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "DNI / NIE / Pasaporte",
+              "displayName": "DNI / NIE / Pasaporte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "@ Instagram",
+              "displayName": "@ Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Precio total",
+              "displayName": "Precio total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Zona del cuerpo",
+              "displayName": "Zona del cuerpo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Alergias/Condiciones",
+              "displayName": "Alergias/Condiciones",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Si tienes alergias, ¿A qué?",
+              "displayName": "Si tienes alergias, ¿A qué?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿Autorizas publicar fotos del tatuaje en redes?",
+              "displayName": "¿Autorizas publicar fotos del tatuaje en redes?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Foto DNI",
+              "displayName": "Foto DNI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        -96
+      ],
+      "id": "5c25f6fd-db75-4959-a1a1-5ca3ff12ef00",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "knRGMuPElzJ7exb7",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Sirve para que el workflow se ejecute cada 1 minuto",
+        "height": 96,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -112,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "da359b15-75b6-43e6-a467-f809d39e32cc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Lee la última fila de las respuestas del form Filtra para traer solo filas que NO estén marcadas como ya procesadas",
+        "height": 128,
+        "width": 166,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "8fb7885c-1447-4073-9c82-5e583d2f4368",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1CWh8DXpG07IelqBQLDe1Du9iXVg0HpR6H6mwh3Vmr0Q",
+          "mode": "list",
+          "cachedResultName": "Consentimiento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CWh8DXpG07IelqBQLDe1Du9iXVg0HpR6H6mwh3Vmr0Q/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1756741343,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CWh8DXpG07IelqBQLDe1Du9iXVg0HpR6H6mwh3Vmr0Q/edit#gid=1756741343"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Estado"
+            }
+          ]
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "detectAutomatically"
+            }
+          },
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        112,
+        0
+      ],
+      "id": "fcf12f5d-1e63-4626-bee6-7f30ecc7eb37",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "knRGMuPElzJ7exb7",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Llama a una API externa para validar los datos",
+        "height": 80,
+        "width": 166,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        288,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "23ae7f47-51e4-4b79-88a9-d429dd26f060",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Evalúa si la respuesta de la API o datos del form cumplen los requisitos, si es correcto (true() envía el correto, si no (false) detiene el flujo.",
+        "height": 112,
+        "width": 230,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        528,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "f6aeac8b-e128-4f8d-b312-735e9d1ffba6",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Redacta y envía automáticamente el email de ntificación a la tatuadora con los datos del cliente que se procesan",
+        "height": 112,
+        "width": 214,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        768,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "591e4b79-2d9c-4768-91f5-efa010907232",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Esto evita que el sistema vuelva a enviar el mismo correo.",
+        "height": 96,
+        "width": 166,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1088,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "402505b3-a8b0-4aac-a830-8adeff3d1802",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "c781f06f-f401-43ff-bef6-4996a1383203",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "42d39ca1795a03c1712c86c3bef58b293344062f11b60dcc41f49ffe88dffdee"
+  },
+  "id": "iQeAPJo8JdU2wuDvb3UM8",
+  "tags": []
+}
